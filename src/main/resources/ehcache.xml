@@ -1,0 +1,32 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNameSpaceSchemaLocation="ehcache.xsd"
+         updateCheck="true"
+         monitoring="autodetect"
+         dynamicConfig="true">
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <cache name="bsmSecretKeyCache"
+            maxEntriesLocalHeap="100"
+            maxEntriesLocalDisk="1000"
+            
+            diskSpoolBufferSizeMB="20"
+            timeToIdleSeconds="10000"
+            timeToLiveSeconds="10000"
+            memoryStoreEvictionPolicy="LRU"
+            >
+        <persistence strategy="localTempSwap"/>
+    </cache>
+     <cache name="CorpSecretKeyCache"
+            maxEntriesLocalHeap="100"
+            maxEntriesLocalDisk="1000"
+            
+            diskSpoolBufferSizeMB="20"
+            timeToIdleSeconds="10000"
+            timeToLiveSeconds="10000"
+            memoryStoreEvictionPolicy="LRU"
+            >
+        <persistence strategy="localTempSwap"/>
+    </cache>
+
+</ehcache>

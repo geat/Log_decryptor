@@ -1,0 +1,32 @@
+elasticsearch:
+  # host: localhost
+  # host: "3.1.59.9"
+  #QA
+  host: "10.0.118.110"
+  port: 9240
+  index:
+    name:
+      # drivers: "db-enriched-drivers"
+      drivers: "gateway_default_analytics"
+      # statistics: "db-statistics"
+      # enriched-drivers: "db-enriched-drivers"
+  pipeline:
+    name: "driver-enrichment-pipeline"
+    path: "pipeline/driver-enrichment.json"
+  policy:
+    name: "enrich-statistics-policy"
+# elasticsearch:
+# # host: localhost
+# host: localhost
+# port: 9200
+# index:
+#   name:
+#     # drivers: "db-enriched-drivers"
+#     drivers: "db-enriched-drivers"
+#     statistics: "db-statistics"
+#     enriched-drivers: "db-enriched-drivers"
+# pipeline:
+#   name: "driver-enrichment-pipeline"
+#   path: "pipeline/driver-enrichment.json"
+# policy:
+#   name: "enrich-statistics-policy"

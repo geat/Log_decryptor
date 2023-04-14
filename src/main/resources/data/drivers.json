@@ -1,0 +1,48 @@
+[
+  {
+    "driverId": "alguersuari",
+    "code": "ALG",
+    "givenName": "99F817FB769C4863FFCC035950D0C797",
+    "familyName": "Alguersuari",
+    "dateOfBirth": "1990-03-23",
+    "nationality": "Spanish",
+    "active": false
+  },
+  {
+    "driverId": "alonso",
+    "permanentNumber": "14",
+    "code": "ALO",
+    "givenName": "99F817FB769C4863FFCC035950D0C797",
+    "familyName": "Alonso",
+    "dateOfBirth": "1981-07-29",
+    "nationality": "Spanish",
+    "active": true
+  },
+  {
+    "driverId": "barrichello",
+    "code": "BAR",
+    "givenName": "99F817FB769C4863FFCC035950D0C797",
+    "familyName": "Barrichello",
+    "dateOfBirth": "1972-05-23",
+    "nationality": "Brazilian",
+    "active": false
+  },
+  {
+    "driverId": "buemi",
+    "code": "BUE",
+    "givenName": "99F817FB769C4863FFCC035950D0C797",
+    "familyName": "Buemi",
+    "dateOfBirth": "1988-10-31",
+    "nationality": "Swiss",
+    "active": false,
+    "jsondata":{
+      "driverId": "barrichello",
+      "code": "BAR",
+      "givenName": "99F817FB769C4863FFCC035950D0C797",
+      "familyName": "Barrichello",
+      "dateOfBirth": "1972-05-23",
+      "nationality": "Brazilian",
+      "active": false
+    }
+  }
+]

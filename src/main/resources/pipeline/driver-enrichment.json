@@ -1,0 +1,17 @@
+{
+  "description": "Enrich drivers statistics information",
+  "processors" : [
+    {
+      "enrich" : {
+        "policy_name": "enrich-statistics-policy",
+        "field" : "driverId",
+        "target_field": "statistics"
+      }
+    },
+    {
+      "remove": {
+        "field": "statistics.driverId"
+      }
+    }
+  ]
+}
