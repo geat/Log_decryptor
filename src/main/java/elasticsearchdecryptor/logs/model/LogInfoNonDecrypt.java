@@ -121,7 +121,13 @@ public class LogInfoNonDecrypt {
           } else {
             JsonNode node = objectMapper.readValue(jsonStr, JsonNode.class);
             JsonNode nameNode = node.get(namevalue);
-            return dc.decryptAES128(nameNode.asText(), getSecretKeyDecrypted(app_name));
+            // 
+            if (nameNode != null) {
+              return dc.decryptAES128(nameNode.asText(), getSecretKeyDecrypted(app_name));
+            } else {
+                // handle the case where the field is not found or is null
+                return null; // or throw an exception, return a default value, etc.
+            }
           }
 
         } catch (IOException e) {

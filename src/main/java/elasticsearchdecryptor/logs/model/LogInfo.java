@@ -35,9 +35,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import com.fasterxml.jackson.databind.node.ValueNode;
+import com.google.gson.stream.JsonWriter;
 
 import java.util.HashMap;
 import elasticsearchdecryptor.logs.decrypt.Decryptor;
+import java.io.StringWriter;
+import com.fasterxml.jackson.core.JsonFactory;
+
+
 
 @Value
 @Builder
@@ -62,7 +67,7 @@ public class LogInfo {
   private JsonNode requestHeaders;
   // String Status_Message;
   Long creationDate;
-  String creationFormatDateFormated;
+  // String creationFormatDateFormated;
   String sessionId;
   Long totalTime;
   String ResponseTime;
@@ -92,6 +97,17 @@ public class LogInfo {
     return value;
   }
 
+  public String getResPayload(){
+    
+    // limit biar ga penuh
+    if (resPayload != null && resPayload.length() > 2000) {
+      
+      return resPayload.substring(0, 2000).toString();
+    } else {
+      System.out.println(resPayload);
+        return resPayload.toString();
+    }
+  }
   // get service name from operationname
   public String getService() {
     String string = operationName;
@@ -116,21 +132,22 @@ public class LogInfo {
         if (json != null && apiName != "signatureX") {
           if (!json.contains("Exception")) {
             if (isJSONValid(json)) {
-              // cari secret key disini agar tidak berulang2 dari 1 res payload
               String SecretKey = getSecretKeyDecrypted(app_name);
-
-              Map<String, String> map = new HashMap<String, String>();
+                        Map<String, String> map = new LinkedHashMap<String, String>();
               try {
                 addKeys("", new ObjectMapper().readTree(json), map, SecretKey);
               } catch (IOException e) {
                 e.printStackTrace();
               }
-              // System.out.println(map);
-
-              // buat sebagai json type
-              JSONObject jsonresult = new JSONObject(map);
-
-              return jsonresult.toString();
+                        ObjectMapper mapper = new ObjectMapper();
+                        String jsonResult = null;
+                        try {
+                            jsonResult = mapper.writeValueAsString(map);
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        }
+                        return jsonResult.substring(0, Math.min(jsonResult.length(), 2000));
+                        // return jsonResult;
             } else {
               return "Format JSON tidak didukung";
             }
@@ -138,9 +155,9 @@ public class LogInfo {
             return "Api Gateway response";
           }
         } else {
-          return "Data Kosong";
+          return "-";
         }
-      } else {
+        }else {
         return "Non Encrypt Log";
       }
     } else {
@@ -165,6 +182,8 @@ public class LogInfo {
     return getJsonStringDecrypt(resPayload);
   }
 
+ 
+  
   private void addKeys(String currentPath, JsonNode jsonNode, Map<String, String> map, String secretKey) {
 
     if (jsonNode.isObject()) {
@@ -175,32 +194,22 @@ public class LogInfo {
       while (iter.hasNext()) {
         Map.Entry<String, JsonNode> entry = iter.next();
         addKeys(pathPrefix + entry.getKey(), entry.getValue(), map, secretKey);
-        // addKeys(pathPrefix, entry.getValue(), map);
-
       }
     } else if (jsonNode.isArray()) {
       ArrayNode arrayNode = (ArrayNode) jsonNode;
       for (int i = 0; i < arrayNode.size(); i++) {
-        // addKeys(currentPath + "[" + i + "]", arrayNode.get(i), map);
-        addKeys(currentPath, arrayNode.get(i), map, secretKey);
+            addKeys(currentPath + "[" + i + "]", arrayNode.get(i), map, secretKey);
       }
     } else if (jsonNode.isValueNode()) {
       ValueNode valueNode = (ValueNode) jsonNode;
-      /*
-       * Validasi HEX type to decrypt
-       * length must >16
-       * secret key valid
-       */
-      if (secretKey != null && !currentPath.equals("file") && valueNode.asText().matches("[0-9a-fA-F]+")
-          && valueNode.asText().length() > 16) {
+
+        if (secretKey != null && valueNode.asText().matches("[0-9a-fA-F]+") && valueNode.asText().length() > 16) {
+            // Validasi HEX type to decrypt, length must >16 and secret key valid
         Decryptor dc = new Decryptor();
         map.put(currentPath, dc.decryptAES128(valueNode.asText(), secretKey));
-        // set nilai corpID
-
       } else {
-        map.put(currentPath, "-");
+            map.put(currentPath, valueNode.asText());
       }
-
     }
   }
 
@@ -312,6 +321,7 @@ public class LogInfo {
     }
 
   }
+  
 
   public String getresPayloadStatusCode() {
 
