@@ -9,18 +9,22 @@ import org.springframework.stereotype.Service;
 import elasticsearchdecryptor.logs.driver.JdbcConfiguration;
 import elasticsearchdecryptor.logs.model.BsmApiConfig;
 import elasticsearchdecryptor.logs.model.CorpSecretKeyData;
-
+import javax.sql.DataSource;
 @Service
 
 public class CacheService {
     static JdbcTemplate jdbcTemplate;
+    
+    public CacheService(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     @Cacheable(value = "bsmSecretKeyCache", key = "#keyname")
     public BsmApiConfig getBsmApiConfig(String keyname) throws Exception {
 
         System.out.println("Query To DB :");
 
-        jdbcTemplate = new JdbcTemplate(JdbcConfiguration.mysqlDataSource());
+        // jdbcTemplate = new JdbcTemplate(JdbcConfiguration.mysqlDataSource());
         String query = "SELECT VALUE,KEYNAME FROM bsm_api_config WHERE KEYNAME=?";
 
         return jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(BsmApiConfig.class),
@@ -30,9 +34,9 @@ public class CacheService {
     @Cacheable(value = "CorpSecretKeyCache", key = "#app_name")
     public CorpSecretKeyData getCorpSecretKeyData(String app_name) throws Exception {
 
-        System.out.println("Query To DB Corp secret key:");
+        // System.out.println("Query To DB Corp secret key:");
 
-        jdbcTemplate = new JdbcTemplate(JdbcConfiguration.mysqlDataSource());
+        // jdbcTemplate = new JdbcTemplate(JdbcConfiguration.mysqlDataSource());
         String query = "SELECT bsm_api_key.APP_NAME,bsm_api_secret.SECRET_KEY FROM bsm_api_key join bsm_api_secret on bsm_api_key.CORP_ID = bsm_api_secret.CORP_ID where  LOWER(APP_NAME) = ? limit 1";
 
         try {

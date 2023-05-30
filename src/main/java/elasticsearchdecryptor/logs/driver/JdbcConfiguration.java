@@ -10,15 +10,15 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 // data source untuk pengambilan secret key
 public class JdbcConfiguration {
-    @Bean
+    // @Bean
     public static DataSource mysqlDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-
-        dataSource.setUrl("jdbc:mysql://10.0.0.0:3306/databaseName");
-        dataSource.setUsername("");
-        dataSource.setPassword("");
+        dataSource.setUrl("jdbc:mysql://docker.besmart-universal.com:3307/bsmapi");
+        dataSource.setUsername("root");
+        dataSource.setPassword("CLS.1234");
         return dataSource;
+    
     }
 
 }

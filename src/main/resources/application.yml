@@ -6,27 +6,18 @@ elasticsearch:
   port: 9240
   index:
     name:
-      # drivers: "db-enriched-drivers"
+      
       drivers: "gateway_default_analytics"
-      # statistics: "db-statistics"
-      # enriched-drivers: "db-enriched-drivers"
+
   pipeline:
     name: "driver-enrichment-pipeline"
     path: "pipeline/driver-enrichment.json"
   policy:
     name: "enrich-statistics-policy"
-# elasticsearch:
-# # host: localhost
-# host: localhost
-# port: 9200
-# index:
-#   name:
-#     # drivers: "db-enriched-drivers"
-#     drivers: "db-enriched-drivers"
-#     statistics: "db-statistics"
-#     enriched-drivers: "db-enriched-drivers"
-# pipeline:
-#   name: "driver-enrichment-pipeline"
-#   path: "pipeline/driver-enrichment.json"
-# policy:
-#   name: "enrich-statistics-policy"
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://docker.besmart-universal.com:3307/bsmapi
+    username: root
+    password: CLS.1234
