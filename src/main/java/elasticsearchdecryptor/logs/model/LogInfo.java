@@ -116,6 +116,7 @@ public class LogInfo {
     return last;
   }
 
+  
   public String getJsonStringDecrypt(String stringJson) {
     Boolean decrypt = false; // set decrypt false dulu
 
@@ -128,26 +129,27 @@ public class LogInfo {
       /* List service yang tidak perlu di decrypt respayloadnya */
       Set<String> notDecrptedService = new HashSet<String>(
           Arrays.asList(new String[] { "signatureX", "generateTokenJWT", "signatureServiceSnap" }));
+          // todo_1 list service seharusnya didalam application.yml
       if (!notDecrptedService.contains(apiName)) {
         if (json != null && apiName != "signatureX") {
           if (!json.contains("Exception")) {
             if (isJSONValid(json)) {
               String SecretKey = getSecretKeyDecrypted(app_name);
-                        Map<String, String> map = new LinkedHashMap<String, String>();
+              Map<String, String> map = new LinkedHashMap<String, String>();
               try {
                 addKeys("", new ObjectMapper().readTree(json), map, SecretKey);
               } catch (IOException e) {
                 e.printStackTrace();
               }
-                        ObjectMapper mapper = new ObjectMapper();
-                        String jsonResult = null;
-                        try {
-                            jsonResult = mapper.writeValueAsString(map);
-                        } catch (JsonProcessingException e) {
-                            e.printStackTrace();
-                        }
-                        return jsonResult.substring(0, Math.min(jsonResult.length(), 2000));
-                        // return jsonResult;
+              ObjectMapper mapper = new ObjectMapper();
+              String jsonResult = null;
+              try {
+                jsonResult = mapper.writeValueAsString(map);
+              } catch (JsonProcessingException e) {
+                e.printStackTrace();
+              }
+              return jsonResult.substring(0, Math.min(jsonResult.length(), 2000));
+              // return jsonResult;
             } else {
               return "Format JSON tidak didukung";
             }
@@ -157,7 +159,7 @@ public class LogInfo {
         } else {
           return "-";
         }
-        }else {
+      } else {
         return "Non Encrypt Log";
       }
     } else {
@@ -166,12 +168,13 @@ public class LogInfo {
 
   }
 
-  public String getQueryParametersDecrypted() {
+// field yang akan di decrypt 
+public String getQueryParametersDecrypted() {
+    
     String prettyString = queryParameters.toPrettyString();
     return getJsonStringDecrypt(prettyString);
   }
-
-  // decrypt otomatis
+ 
 
   public String getReqPayloadDecrypted() {
     return getJsonStringDecrypt(reqPayload);
@@ -305,8 +308,11 @@ public class LogInfo {
         corp_secret_key_encrypted = null;
         e.printStackTrace();
       }
-      // Decrypt CORP_SECRET_KEY menggunakan KEY BSM_SCRET_KEY
-      if (corp_secret_key_encrypted != null) {
+      /* Decrypt CORP_SECRET_KEY menggunakan KEY BSM_SCRET_KEY
+      cek kondisi harus ada semua untuk bsm_secret_key dan corp_secret_key
+      */ 
+
+      if (corp_secret_key_encrypted != null && bsm_secret_key != null ) {
         Decryptor dc = new Decryptor();
 
         corp_secret_key_decrypted = dc.decryptAES128(corp_secret_key_encrypted, bsm_secret_key);
