@@ -16,7 +16,7 @@ public class BsmSecretKeyCache {
     @Cacheable(value = "bsmSecretKeyCache", key = "#keyname")
     public BsmApiConfig getBsmApiConfig(String keyname) throws Exception {
 
-        System.out.println("Query To DB :");
+        System.out.println("Query To DB bsmSecretKeyCache :");
 
         jdbcTemplate = new JdbcTemplate(JdbcConfiguration.mysqlDataSource());
         String query = "SELECT VALUE,KEYNAME FROM bsm_api_config WHERE KEYNAME=?";
